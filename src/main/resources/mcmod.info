@@ -1,16 +1,15 @@
-[
-{
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+[{
+  "modid": "mod_TheGuide",
+  "name": "The Guide",
+  "description": "A generic documentation plugin",
   "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authors": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "credits": "Created by Redattack34",
   "logoFile": "",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Redattack34/TheGuide",
+  "updateUrl": "",
+  "authors": [ "Redattack34" ],
+  "parent":"",
   "screenshots": [],
-  "dependencies": []
-}
-]
+  "dependencies": ["mod_MinecraftForge"]
+}]

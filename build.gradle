@@ -12,10 +12,15 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'scala'
 
-version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+tasks.withType(ScalaCompile) {
+    //scalaCompileOptions.useAnt = false
+}
+
+version = "1.0-alpha1"
+group= "com.castlebravostudios.theguide" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "TheGuide"
 
 minecraft {
 	version = "1.6.4-9.11.1.964"
