@@ -23,7 +23,7 @@ object LineParser extends RegexParsers {
 
   private val emptyLine : Parser[MarkdownLine] = "([ \t]*)$".r ^^^ EmptyLine
 
-  private val textLine : Parser[MarkdownLine] = rest ^^ ( text => TextLine( text ) )
+  private val textLine : Parser[MarkdownLine] = rest ^^ ( text => TextLine( text.trim ) )
 
   private val lineParser : Parser[MarkdownLine] = emptyLine | textLine
 

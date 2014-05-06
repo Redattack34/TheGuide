@@ -26,6 +26,10 @@ class LineParserSpec extends FlatSpec {
     assert( parseLines( Seq( "Lorem Ipsum" ) ) == Right( Seq( TextLine( "Lorem Ipsum" ) ) ) )
   }
 
+  it should "trim the text of TextLines" in {
+    assert( parseLines( Seq( "    Lorem Ipsum\t" ) ) == Right( Seq( TextLine( "Lorem Ipsum" ) ) ) )
+  }
+
   it should "return a mixture of TextLines and EmptyLines when given a mix of strings" in {
     assert(
         parseLines( Seq( " ", "\t", "Lorem Ipsum", " \t \t\t\t   ", "dolor sit amet" ) ) ==
