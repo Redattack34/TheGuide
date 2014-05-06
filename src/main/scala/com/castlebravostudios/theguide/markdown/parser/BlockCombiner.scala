@@ -12,7 +12,6 @@ object BlockCombiner {
   private sealed trait CombineResult
   private case class Success( result : MarkdownBlock, rest : Seq[MarkdownLine] ) extends CombineResult
   private case class Failure( error : String ) extends CombineResult
-  private case object EndOfInput extends CombineResult
 
   private def combineTextLines( lines : Seq[MarkdownLine] ) : CombineResult = lines match {
     case TextLine( text ) :: rest => combineTextLines( rest ) match {
@@ -39,7 +38,6 @@ object BlockCombiner {
           remainingLines = rest
         }
         case Failure( msg ) => return Left( msg )
-        case EndOfInput => remainingLines = Seq()
       }
     }
     return Right( buffer.toSeq )
