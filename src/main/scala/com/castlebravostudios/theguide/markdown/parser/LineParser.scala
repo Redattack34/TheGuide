@@ -27,13 +27,12 @@ object LineParser extends RegexParsers {
 
   private val lineParser : Parser[MarkdownLine] = emptyLine | textLine
 
-  private def parseLine( str : String ) : Either[String, MarkdownLine] = {
-    val result = parseAll( lineParser, str )
-    result match {
+  private def parseLine( str : String ) : Either[String, MarkdownLine] =
+    parseAll( lineParser, str ) match {
       case Success( result, _ ) => Right( result )
       case Failure( msg, _ ) => Left( msg )
+      case Error( msg, _ ) => Left( msg )
     }
-  }
 
   def parseLines(lines: Seq[String]) : Either[String, Seq[MarkdownLine]] = {
     val buffer = ListBuffer[MarkdownLine]( )
