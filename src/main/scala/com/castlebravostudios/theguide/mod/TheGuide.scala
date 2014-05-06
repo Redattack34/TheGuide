@@ -59,7 +59,9 @@ object TheGuide {
   }
 
   @EventHandler
-  def postInit( event : FMLPostInitializationEvent ) : Unit = Unit
+  def postInit( event : FMLPostInitializationEvent ) : Unit = {
+
+  }
 
   @EventHandler
   def load( event : FMLInitializationEvent ) : Unit = {
