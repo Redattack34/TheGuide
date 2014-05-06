@@ -10,6 +10,8 @@ import com.castlebravostudios.theguide.markdown.MarkdownLine
 import com.castlebravostudios.theguide.markdown.EmptyLine
 import com.castlebravostudios.theguide.markdown.TextLine
 import scala.collection.mutable.ListBuffer
+import com.castlebravostudios.theguide.markdown.HeaderRule
+import com.castlebravostudios.theguide.markdown.Header
 
 
 object LineParser extends RegexParsers {
@@ -21,11 +23,21 @@ object LineParser extends RegexParsers {
     }
   }
 
-  private val emptyLine : Parser[MarkdownLine] = "([ \t]*)$".r ^^^ EmptyLine
+  private val emptyLine : Parser[MarkdownLine] = "[ \t]*$".r ^^^ EmptyLine
 
   private val textLine : Parser[MarkdownLine] = rest ^^ ( text => TextLine( text.trim ) )
 
-  private val lineParser : Parser[MarkdownLine] = emptyLine | textLine
+  private val header1Rule : Parser[MarkdownLine] = "=+$".r ^^^ HeaderRule( 1 )
+  private val header2Rule : Parser[MarkdownLine] = "-+$".r ^^^ HeaderRule( 2 )
+
+  private val headerRuleLine : Parser[MarkdownLine] = header1Rule | header2Rule
+
+  private val headerLine : Parser[MarkdownLine] = "#{1,6} ".r ~ rest ^^ {
+    case level ~ text if level.length <= 7 => Header( level.trim.length,
+        text.trim.replaceAll( "#*$", "" ).trim )
+  }
+
+  private val lineParser : Parser[MarkdownLine] = emptyLine | headerRuleLine | headerLine | textLine
 
   private def parseLine( str : String ) : Either[String, MarkdownLine] =
     parseAll( lineParser, str ) match {
