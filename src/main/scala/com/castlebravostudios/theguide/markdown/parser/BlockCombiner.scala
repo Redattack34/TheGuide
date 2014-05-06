@@ -24,8 +24,7 @@ object BlockCombiner {
 
   private def doCombineLines( lines : Seq[MarkdownLine] ) : CombineResult = lines match {
     case TextLine(_) :: rest => combineTextLines( lines )
-    case EmptyLine :: rest => doCombineLines( rest )
-    case _ => EndOfInput
+    case EmptyLine :: rest => Success( EmptyLine, rest )
   }
 
   def combineLines( lines : Seq[MarkdownLine] ) : Either[String, Seq[MarkdownBlock]] = {
@@ -34,6 +33,7 @@ object BlockCombiner {
     while ( !remainingLines.isEmpty ) {
       val result = doCombineLines( remainingLines )
       result match {
+        case Success( EmptyLine, rest ) => remainingLines = rest
         case Success( result, rest ) => {
           buffer += result
           remainingLines = rest
