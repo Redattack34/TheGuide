@@ -8,4 +8,4 @@ private[parser] case class Header( val level : Int, val text : String ) extends 
 
 private[parser] case class TextLine( val text : String ) extends MarkdownLine
 private[parser] case class HeaderRule( val level : Int ) extends MarkdownLine
-private[parser] case object EmptyLine extends MarkdownLine with MarkdownBlock
+private[parser] case object EmptyLine extends MarkdownLine
