@@ -19,10 +19,4 @@ object Parser {
       result <- SpanParser.parseSpans( blocks ).right
     } yield result
   }
-
-  def main(args: Array[String]) {
-    val path = Paths.get( "C:/Users/Redattack34/Desktop/My Dropbox/workspace/TheGuide/src/main/resources/assets/theguide/markdown/Test.md" )
-    val stream = Files.newInputStream(path)
-    parse( stream ).right.get.foreach( println )
-  }
 }
