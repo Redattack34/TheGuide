@@ -1,20 +1,9 @@
 package com.castlebravostudios.theguide.markdown.parser
 
-import java.nio.file.Paths
-import java.nio.file.Files
-import java.nio.charset.StandardCharsets
-import java.io.Reader
-import scala.util.parsing.combinator._
-import scala.util.parsing.combinator.syntactical.StandardTokenParsers
-import com.castlebravostudios.theguide.markdown.MarkdownLine
-import com.castlebravostudios.theguide.markdown.EmptyLine
-import com.castlebravostudios.theguide.markdown.TextLine
 import scala.collection.mutable.ListBuffer
-import com.castlebravostudios.theguide.markdown.HeaderRule
-import com.castlebravostudios.theguide.markdown.Header
+import scala.util.parsing.combinator._
 
-
-object LineParser extends RegexParsers {
+private object LineParser extends RegexParsers {
 
   private val rest = new Parser[String] {
     def apply( in : Input ) : ParseResult[String] = in.first match {

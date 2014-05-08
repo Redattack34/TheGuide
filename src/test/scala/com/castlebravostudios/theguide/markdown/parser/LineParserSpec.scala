@@ -1,11 +1,6 @@
 package com.castlebravostudios.theguide.markdown.parser
 
 import org.scalatest.FlatSpec
-import com.castlebravostudios.theguide.markdown.EmptyLine
-import com.castlebravostudios.theguide.markdown.MarkdownLine
-import com.castlebravostudios.theguide.markdown.TextLine
-import com.castlebravostudios.theguide.markdown.HeaderRule
-import com.castlebravostudios.theguide.markdown.Header
 
 class LineParserSpec extends FlatSpec {
 

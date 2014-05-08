@@ -1,7 +1,6 @@
 package com.castlebravostudios.theguide.markdown.parser
 
 import org.scalatest.FlatSpec
-import com.castlebravostudios.theguide.markdown._
 
 class BlockCombinerSpec extends FlatSpec {
 

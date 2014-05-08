@@ -2,15 +2,7 @@ package com.castlebravostudios.theguide.markdown.parser
 
 import scala.collection.mutable.ListBuffer
 
-import com.castlebravostudios.theguide.markdown.EmptyLine
-import com.castlebravostudios.theguide.markdown.Header
-import com.castlebravostudios.theguide.markdown.HeaderRule
-import com.castlebravostudios.theguide.markdown.MarkdownBlock
-import com.castlebravostudios.theguide.markdown.MarkdownLine
-import com.castlebravostudios.theguide.markdown.Paragraph
-import com.castlebravostudios.theguide.markdown.TextLine
-
-object BlockCombiner {
+private object BlockCombiner {
 
   private sealed trait CombineResult
   private case class Success( result : MarkdownBlock, rest : Seq[MarkdownLine] ) extends CombineResult
