@@ -1,10 +1,7 @@
 package com.castlebravostudios.theguide.markdown.parser
 
 import org.scalatest.FlatSpec
-import com.castlebravostudios.theguide.markdown.EmptyLine
-import com.castlebravostudios.theguide.markdown.MarkdownBlock
-import com.castlebravostudios.theguide.markdown.TextLine
-import com.castlebravostudios.theguide.markdown.Paragraph
+import com.castlebravostudios.theguide.markdown._
 
 class BlockCombinerSpec extends FlatSpec {
 
@@ -38,5 +35,19 @@ class BlockCombinerSpec extends FlatSpec {
     val expectedText = text.mkString(" ")
     assert( combineLines( lines ) ==
       Right( Seq.fill(3)( Paragraph( expectedText ) ) ) )
+  }
+
+  it should "convert a textline followed by a header rule to a header" in {
+    assert( combineLines( Seq( TextLine("Lorem ipsum"), HeaderRule(2) ) ) ===
+      Right( Seq( Header( 2, "Lorem ipsum") ) ) )
+  }
+
+  it should "return a failure on a header rule with no preceeding textline" in {
+    assert( combineLines( Seq( HeaderRule( 1 ) ) ).isLeft )
+  }
+
+  it should "return headers unchanged" in {
+    assert( combineLines( Seq( Header( 1, "Lorem ipsum" ) ) ) ==
+      Right( Seq( Header( 1, "Lorem ipsum" ) ) ) )
   }
 }

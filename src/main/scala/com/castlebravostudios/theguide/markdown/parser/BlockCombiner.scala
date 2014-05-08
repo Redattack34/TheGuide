@@ -1,11 +1,14 @@
 package com.castlebravostudios.theguide.markdown.parser
 
+import scala.collection.mutable.ListBuffer
+
 import com.castlebravostudios.theguide.markdown.EmptyLine
+import com.castlebravostudios.theguide.markdown.Header
+import com.castlebravostudios.theguide.markdown.HeaderRule
 import com.castlebravostudios.theguide.markdown.MarkdownBlock
 import com.castlebravostudios.theguide.markdown.MarkdownLine
 import com.castlebravostudios.theguide.markdown.Paragraph
 import com.castlebravostudios.theguide.markdown.TextLine
-import scala.collection.mutable.ListBuffer
 
 object BlockCombiner {
 
@@ -22,7 +25,10 @@ object BlockCombiner {
   }
 
   private def doCombineLines( lines : Seq[MarkdownLine] ) : CombineResult = lines match {
+    case TextLine( text ) :: HeaderRule( level ) :: rest => Success( Header( level, text ), rest )
+    case HeaderRule( _ ) :: rest => Failure( "A header rule must be preceeded by a text line." )
     case TextLine(_) :: rest => combineTextLines( lines )
+    case (a@Header( _, _ )) :: rest => Success( a, rest )
     case EmptyLine :: rest => Success( EmptyLine, rest )
   }
 
