@@ -33,9 +33,13 @@ import net.minecraftforge.common.Property
 
 object Config {
 
+  var guideItemId : Int = _
+
   def load( file : File ): Unit = {
     val config = new Configuration( file )
     config.load()
+
+    guideItemId = config.getItem( "TheGuide", 4242 ).getInt()
 
     if ( config.hasChanged() ) {
       config.save()
