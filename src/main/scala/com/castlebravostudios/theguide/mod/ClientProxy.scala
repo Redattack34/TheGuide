@@ -29,9 +29,11 @@ package com.castlebravostudios.theguide.mod
 
 
 import net.minecraftforge.client.MinecraftForgeClient
-
 import cpw.mods.fml.common.registry.TickRegistry
 import cpw.mods.fml.relauncher.Side
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.world.World
+import com.castlebravostudios.theguide.gui.TheGuideGui
 
 class ClientProxy extends CommonProxy {
 
@@ -39,5 +41,12 @@ class ClientProxy extends CommonProxy {
   }
 
   override def loadTextures() : Unit = {
+  }
+
+  override def getClientGuiElement( id : Int, player : EntityPlayer, world : World, x : Int, y : Int, z : Int ) : Object = {
+    id match {
+      case TheGuide.theGuideScreenId => new TheGuideGui( )
+      case _ => null
+    }
   }
 }

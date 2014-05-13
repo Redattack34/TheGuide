@@ -28,11 +28,9 @@
 package com.castlebravostudios.theguide.mod
 
 import java.util.logging.Logger
-
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
-
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.SidedProxy
@@ -40,10 +38,14 @@ import cpw.mods.fml.common.event.FMLInitializationEvent
 import cpw.mods.fml.common.event.FMLPostInitializationEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.network.NetworkMod
+import com.castlebravostudios.theguide.items.Guide
+import cpw.mods.fml.common.network.NetworkRegistry
 
 @Mod(modid="mod_TheGuide", version="1.0-alpha1", modLanguage="scala", useMetadata=true)
 @NetworkMod(clientSideRequired=true, serverSideRequired=true)
 object TheGuide {
+
+  val theGuideScreenId : Int = 1
 
   private var _logger : Logger = _
   def logger : Logger = _logger
@@ -67,6 +69,10 @@ object TheGuide {
   def load( event : FMLInitializationEvent ) : Unit = {
     proxy.registerRenderers()
     proxy.loadTextures()
+
+    new Guide() //Constructor registers item.
+
+    NetworkRegistry.instance().registerGuiHandler(TheGuide, proxy)
   }
 
   def texture( path : String ) : ResourceLocation =
