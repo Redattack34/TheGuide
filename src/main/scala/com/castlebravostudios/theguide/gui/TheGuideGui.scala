@@ -9,6 +9,7 @@ import com.castlebravostudios.theguide.text.WordWrapper
 import com.castlebravostudios.theguide.text.DefaultTextSizeCalculator
 import com.castlebravostudios.theguide.text.TextLine
 import com.castlebravostudios.theguide.text.RenderableDocument
+import com.castlebravostudios.theguide.markdown.Header
 
 class TheGuideGui extends GuiScreen {
 
@@ -24,7 +25,7 @@ class TheGuideGui extends GuiScreen {
   private[this] def textXSize = 190
   private[this] def textYSize = 280
 
-  private[this] val text = Paragraph( Seq( TextSpan( """Lorem ipsum dolor sit amet,
+  private[this] val text = Seq( Paragraph( Seq( TextSpan( """Lorem ipsum dolor sit amet,
  consectetur adipiscing elit. Vivamus vitae bibendum nulla, in consectetur
  lorem. Phasellus eget libero vitae lorem lacinia mollis ut id nibh. Suspendisse
  at purus mauris. Pellentesque sed risus in nisl consectetur iaculis. Donec
@@ -33,7 +34,8 @@ class TheGuideGui extends GuiScreen {
  Curabitur eget ullamcorper est. Curabitur tempus neque vitae est iaculis
  ultricies. Pellentesque placerat vel justo sit amet sodales. Mauris quis
  elementum lacus, sit amet tempor mi. Nullam et aliquet enim, vel fermentum
- metus. """.filter( c => c != '\n' && c != '\r' ) ) ) )
+ metus. """.filter( c => c != '\n' && c != '\r' ) ) ) ),
+   Header( 1, TextSpan( "Test Header 1" ) ), Header( 2, TextSpan( "Test Header 2" ) ) )
 
   private[this] var document : RenderableDocument = _
 
@@ -50,7 +52,7 @@ class TheGuideGui extends GuiScreen {
     GL11.glScaled(0.5d, 0.5d, 0.5d)
 
     if ( document == null ) {
-      document = RenderableDocument( Seq( text ), textXSize,
+      document = RenderableDocument( text, textXSize,
           new DefaultTextSizeCalculator( fontRenderer ) )
     }
     document.render( (width - textXSize/2) - 5, (height - textYSize/2),
