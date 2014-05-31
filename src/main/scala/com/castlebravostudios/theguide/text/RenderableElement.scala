@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11
 case class Link( target : ResourceLocation, startX : Int, endX : Int )
 
 trait RenderableElement {
-  def height( renderer: FontRenderer ) : Int = renderer.FONT_HEIGHT + 1
+  def height( calc: TextSizeCalculator ) : Int = calc.textHeight + 1
   def render( x : Int, y : Int, renderer : FontRenderer ) : Unit
 
   val color = 0x404040

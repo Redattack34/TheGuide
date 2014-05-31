@@ -8,7 +8,8 @@ class WordWrapperSpec extends FlatSpec {
   val calc = new TestTextSizeCalculator( )
   var wrapper : WordWrapper = _
 
-  override def withFixture( test : NoArgTest ) = {wrapper=new WordWrapper(calc, 100 )
+  override def withFixture( test : NoArgTest ) = {
+    wrapper = new WordWrapper(calc, 100 )
     super.withFixture(test)
   }
 
