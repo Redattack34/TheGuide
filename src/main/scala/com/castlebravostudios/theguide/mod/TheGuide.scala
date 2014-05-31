@@ -77,4 +77,6 @@ object TheGuide {
 
   def texture( path : String ) : ResourceLocation =
     new ResourceLocation( "theguide", path )
+  def document( path : String ) : ResourceLocation =
+    new ResourceLocation( "theguide", path )
 }
