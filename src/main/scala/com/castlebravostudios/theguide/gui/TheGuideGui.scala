@@ -30,8 +30,7 @@ class TheGuideGui extends GuiScreen {
 
   private[this] var document : RenderableDocument = _
 
-  //Color is in 8-bit RGB. Hence hex. This is a sort of very dark grey.
-  private[this] val color = 0x404040
+  private[this] val scroll = 258
 
   override def drawScreen( mouseX : Int, mouseY : Int, param3 : Float ): Unit = {
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
@@ -47,7 +46,7 @@ class TheGuideGui extends GuiScreen {
           new DefaultTextSizeCalculator( fontRenderer ) )
     }
     document.render( (width - textXSize/2) - 5, (height - textYSize/2),
-        textXSize, textYSize, fontRenderer)
+        textXSize, textYSize, scroll, fontRenderer)
 
     GL11.glPopMatrix();
 

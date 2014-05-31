@@ -11,11 +11,15 @@ import scala.collection.mutable
 
 class RenderableDocument( renderables : Seq[RenderableElement] ) {
 
-  def render( x : Int, y : Int, width : Int, height : Int, renderer: FontRenderer ) : Unit = {
+  def render( x : Int, y : Int, width : Int, height : Int, scroll : Int, renderer: FontRenderer ) : Unit = {
     var offset : Int = 0
     renderables.foreach { r =>
-      r.render(x, y + offset, renderer)
-      offset += r.height( renderer )
+      val newOffset = offset - scroll
+      val lineHeight = r.height(renderer)
+      if ( newOffset + lineHeight * 2 > 0 && newOffset < height ) {
+        r.render(x, y + newOffset, renderer)
+      }
+      offset += lineHeight
     }
   }
 }
