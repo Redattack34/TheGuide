@@ -8,6 +8,7 @@ import com.castlebravostudios.theguide.markdown.TextSpan
 import com.castlebravostudios.theguide.text.WordWrapper
 import com.castlebravostudios.theguide.text.DefaultTextSizeCalculator
 import com.castlebravostudios.theguide.text.TextLine
+import com.castlebravostudios.theguide.text.RenderableDocument
 
 class TheGuideGui extends GuiScreen {
 
@@ -34,6 +35,8 @@ class TheGuideGui extends GuiScreen {
  elementum lacus, sit amet tempor mi. Nullam et aliquet enim, vel fermentum
  metus. """.filter( c => c != '\n' && c != '\r' ) ) ) )
 
+  private[this] var document : RenderableDocument = _
+
   //Color is in 8-bit RGB. Hence hex. This is a sort of very dark grey.
   private[this] val color = 0x404040
 
@@ -46,16 +49,12 @@ class TheGuideGui extends GuiScreen {
     GL11.glPushMatrix()
     GL11.glScaled(0.5d, 0.5d, 0.5d)
 
-    val wrapper = new WordWrapper( new DefaultTextSizeCalculator( fontRenderer ), textXSize );
-    wrapper.appendString( text.text.head.asInstanceOf[TextSpan].text )
-    val renderables = wrapper.build
-
-    val withPos = renderables.zipWithIndex.map {
-      case (line, idx) => (line, idx * ( fontRenderer.FONT_HEIGHT + 1 ) )
+    if ( document == null ) {
+      document = RenderableDocument( Seq( text ), textXSize,
+          new DefaultTextSizeCalculator( fontRenderer ) )
     }
-    withPos.foreach { case (TextLine(str, _), y) =>
-      fontRenderer.drawString(str, (width - textXSize/2) - 5, (height - textYSize/2) + y, color, false)
-    }
+    document.render( (width - textXSize/2) - 5, (height - textYSize/2),
+        textXSize, textYSize, fontRenderer)
 
     GL11.glPopMatrix();
 
