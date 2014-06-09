@@ -42,8 +42,8 @@ trait RenderableElement {
 
 case class RenderableHeader( text: String, level : Int ) extends RenderableElement {
   val formattedText = level match {
-    case 1 => "§l§n" + text + "§r"
-    case _ => "§n" + text + "§r"
+    case 1 => "Â§lÂ§n" + text + "Â§r"
+    case _ => "Â§n" + text + "Â§r"
   }
 
   def render( x: Int, y : Int, renderer: FontRenderer ) : Unit = {

@@ -77,7 +77,7 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
   }
 
   private def currentLineNoFormat: String = {
-    currentLine.replaceAll("ง.", "")
+    currentLine.replaceAll("ยง.", "")
   }
 
   def startLink( loc : ResourceLocation ) : Unit = {
@@ -85,7 +85,7 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
       throw new IllegalStateException( "Already formatting a link.")
     }
     currentLinkStart = calc.stringWidth(currentLine)
-    currentLine += "งoง9"
+    currentLine += "ยงoยง9"
     println(currentLine)
     currentLinkLocation = Some( loc )
   }
@@ -95,7 +95,7 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
       throw new IllegalStateException( "Not formatting a link." )
     }
     cutLink()
-    currentLine += "งr"
+    currentLine += "ยงr"
     currentLinkLocation = None
   }
 

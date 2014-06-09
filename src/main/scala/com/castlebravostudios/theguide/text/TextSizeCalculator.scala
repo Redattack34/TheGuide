@@ -39,6 +39,6 @@ class DefaultTextSizeCalculator( renderer : FontRenderer ) extends TextSizeCalcu
 }
 class TestTextSizeCalculator extends TextSizeCalculator {
   def stringWidth( str : String ) : Int =
-    str.replaceAll("ง.", "").length()
+    str.replaceAll("ยง.", "").length()
   def textHeight : Int = 9
 }
