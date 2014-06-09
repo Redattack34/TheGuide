@@ -10,7 +10,7 @@ import net.minecraft.client.gui.FontRenderer
 import scala.collection.mutable
 import com.google.common.annotations.VisibleForTesting
 
-class RenderableDocument( renderables : SortedMap[Int, RenderableElement], size : Int ) {
+class RenderableDocument( renderables : SortedMap[Int, RenderableElement], val size : Int ) {
 
   def render( x : Int, y : Int, width : Int, height : Int, scroll : Int, renderer: FontRenderer ) : Unit = {
     val start = renderables.to( scroll - 20 ).lastOption.map( _._1 ).getOrElse( renderables.firstKey )
@@ -19,8 +19,6 @@ class RenderableDocument( renderables : SortedMap[Int, RenderableElement], size 
       renderable.render(x, y + offset - scroll, renderer)
     }
   }
-
-  def documentHeight : Int = size
 
   @VisibleForTesting
   private[text] val elements : Seq[RenderableElement] = renderables.values.toList

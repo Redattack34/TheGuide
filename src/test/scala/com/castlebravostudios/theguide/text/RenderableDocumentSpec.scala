@@ -31,7 +31,7 @@ class RenderableDocumentSpec extends FlatSpec {
   }
 
   it should "calculate document size correctly" in {
-    assert( document( Seq( paragraph( 10 ) ) ).documentHeight === 100 )
+    assert( document( Seq( paragraph( 10 ) ) ).size === 100 )
   }
 
   private def wrappedLines( count : Int ) : Seq[TextLine] = {
