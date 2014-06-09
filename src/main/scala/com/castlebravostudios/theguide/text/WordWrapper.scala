@@ -38,7 +38,7 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
   private var currentLinkLocation : Option[ResourceLocation] = None
   private val currentLineLinks = mutable.Set[Link]()
 
-  def appendString(text: String) = {
+  def appendString(text: String) : Unit = {
     text.split(" ").foreach( appendWord )
   }
 
@@ -86,7 +86,6 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
     }
     currentLinkStart = calc.stringWidth(currentLine)
     currentLine += "§o§9"
-    println(currentLine)
     currentLinkLocation = Some( loc )
   }
 

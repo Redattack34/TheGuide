@@ -39,7 +39,7 @@ private object BlockCombiner {
   private def combineTextLines( lines : Seq[MarkdownLine] ) : CombineResult = lines match {
     case TextLine( text ) :: rest => combineTextLines( rest ) match {
       case Success( Paragraph( pText ), remaining ) => Success( Paragraph( (text + " " + pText).trim ), remaining )
-      case result => result
+      case result : CombineResult => result
     }
     case _ => Success( Paragraph( "" ), lines )
   }

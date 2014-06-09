@@ -30,8 +30,7 @@ package com.castlebravostudios.theguide.markdown.parser
 import org.scalatest.FlatSpec
 
 class BlockCombinerSpec extends FlatSpec {
-
-  import BlockCombiner.combineLines
+  private def combineLines( lines : Seq[MarkdownLine]) = BlockCombiner.combineLines(lines)
 
   "BlockCombiner" should "return an empty sequence when given only an empty line" in {
     assert( combineLines( Seq( EmptyLine ) ) == Right( Seq[MarkdownBlock]() ) )

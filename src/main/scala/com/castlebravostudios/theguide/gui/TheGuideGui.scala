@@ -135,7 +135,7 @@ class TheGuideGui extends GuiScreen {
     drawTexturedModalRect(x, y, 0, 0, xSize, ySize)
   }
 
-  def drawScrollbar() = {
+  private def drawScrollbar() = {
     val x1 = (width/2) + scrollThumbBaseXOffset
     val x2 = x1 + scrollbarWidth
 

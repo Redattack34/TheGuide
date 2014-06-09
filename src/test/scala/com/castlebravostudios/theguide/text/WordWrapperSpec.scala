@@ -29,13 +29,14 @@ package com.castlebravostudios.theguide.text
 
 import org.scalatest.FlatSpec
 import net.minecraft.util.ResourceLocation
+import org.scalatest.Outcome
 
 class WordWrapperSpec extends FlatSpec {
 
   val calc = new TestTextSizeCalculator( )
   var wrapper : WordWrapper = _
 
-  override def withFixture( test : NoArgTest ) = {
+  override def withFixture( test : NoArgTest ) : Outcome = {
     wrapper = new WordWrapper(calc, 100 )
     super.withFixture(test)
   }

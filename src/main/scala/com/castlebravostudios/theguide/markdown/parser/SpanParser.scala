@@ -33,7 +33,7 @@ import com.castlebravostudios.theguide.markdown.{ Paragraph => SpanParagraph }
 import com.castlebravostudios.theguide.markdown.TextSpan
 import scala.util.parsing.combinator.RegexParsers
 import com.castlebravostudios.theguide.markdown.MarkdownSpan
-import scala.util.parsing.combinator._
+import scala.util.parsing.combinator.RegexParsers
 import net.minecraft.util.ResourceLocation
 import com.castlebravostudios.theguide.markdown.LinkSpan
 import scala.collection.mutable.ListBuffer
@@ -48,7 +48,7 @@ private object SpanParser extends RegexParsers {
   }
 
   private val textSpan : Parser[TextSpan] = text ^^ {
-    case str => TextSpan( str )
+    case str : String => TextSpan( str )
   }
 
   private val linkSpan : Parser[LinkSpan] =
@@ -67,7 +67,7 @@ private object SpanParser extends RegexParsers {
       case Error( msg, _ ) => Left( msg )
     }
 
-  override def skipWhitespace = false
+  override def skipWhitespace : Boolean = false
 
   private def parseSpansInBlock( block : MarkdownBlock ) : Either[String, SpanBlock] = block match {
     case Header( level, text ) => doParse( textSpan, text ).right

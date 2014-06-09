@@ -28,14 +28,14 @@
 package com.castlebravostudios.theguide.markdown.parser
 
 import scala.collection.mutable.ListBuffer
-import scala.util.parsing.combinator._
+import scala.util.parsing.combinator.RegexParsers
 
 private object LineParser extends RegexParsers {
 
   private val rest = new Parser[String] {
     def apply( in : Input ) : ParseResult[String] = in.first match {
-      case x if in.atEnd => Success( "", in.rest )
-      case x => apply( in.rest ).map( x + _ )
+      case x : Elem if in.atEnd => Success( "", in.rest )
+      case x : Elem => apply( in.rest ).map( x + _ )
     }
   }
 

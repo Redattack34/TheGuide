@@ -36,7 +36,7 @@ import net.minecraft.util.ResourceLocation
 
 class SpanParserSpec extends FlatSpec {
 
-  import SpanParser.parseSpans
+  private def parseSpans( blocks : Seq[MarkdownBlock] ) = SpanParser.parseSpans(blocks)
 
   "SpanParser" should "return a header when given a header" in {
     assert( parseSpans( Seq( Header( 1, "Lorem Ipsum" ) ) ) ==
