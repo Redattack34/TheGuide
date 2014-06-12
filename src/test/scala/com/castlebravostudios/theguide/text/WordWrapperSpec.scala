@@ -68,7 +68,7 @@ class WordWrapperSpec extends FlatSpec {
     wrapper.startLink( new ResourceLocation( "test", "test" ) )
     wrapper.appendString( "ipsum dolor sit amet" )
     wrapper.endLink()
-    assert( wrapper.build.head.text === "Lorem§o§9 ipsum dolor sit amet§r" )
+    assert( wrapper.build.head.text === "Lorem§9§n ipsum dolor sit amet§r" )
   }
 
   it should "return a text line containing the appropriate link object" in {
@@ -78,7 +78,7 @@ class WordWrapperSpec extends FlatSpec {
     wrapper.appendString( "ipsum dolor sit amet" )
     wrapper.endLink()
     assert( wrapper.build.head ===
-      TextLine( "Lorem§o§9 ipsum dolor sit amet§r",
+      TextLine( "Lorem§9§n ipsum dolor sit amet§r",
           Set( Link( loc, 5, 26 ) ) ) )
   }
 
@@ -93,10 +93,10 @@ class WordWrapperSpec extends FlatSpec {
     wrapper.appendString( "Ut vel euismod risus, vel " +
               "mattis justo. Sed vitae odio nonmetus" )
 
-    val firstLine = TextLine( "Lorem ipsum dolor sit amet,§o§9 consectetur adipiscing elit. " +
+    val firstLine = TextLine( "Lorem ipsum dolor sit amet,§9§n consectetur adipiscing elit. " +
               "Maecenas mattis consequat ipsum sed auctor.§r",
               Set( Link( loc, 27, 100 ) ) )
-    val secondLine = TextLine( "§o§9Fusce blandit convallis luctus.§r Ut vel euismod risus, vel " +
+    val secondLine = TextLine( "§9§nFusce blandit convallis luctus.§r Ut vel euismod risus, vel " +
               "mattis justo. Sed vitae odio nonmetus",
               Set( Link( loc, 0, 31 ) ) )
     assert( wrapper.build === Seq( firstLine, secondLine ) )
@@ -114,7 +114,7 @@ class WordWrapperSpec extends FlatSpec {
     wrapper.endLink()
 
     assert( wrapper.build === Seq(
-        TextLine( "§o§9Lorem ipsum§r§o§9 dolor sit amet§r",
+        TextLine( "§9§nLorem ipsum§r§9§n dolor sit amet§r",
             Set( Link( loc1, 0, 11 ), Link( loc2, 11, 26 ) ) ) ) )
   }
 }

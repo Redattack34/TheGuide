@@ -85,7 +85,7 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
       throw new IllegalStateException( "Already formatting a link.")
     }
     currentLinkStart = calc.stringWidth(currentLine)
-    currentLine += "§o§9"
+    currentLine += "§9§n"
     currentLinkLocation = Some( loc )
   }
 

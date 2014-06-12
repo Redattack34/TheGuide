@@ -30,12 +30,14 @@ package com.castlebravostudios.theguide.text
 import net.minecraft.util.ResourceLocation
 import net.minecraft.client.gui.FontRenderer
 import org.lwjgl.opengl.GL11
+import com.castlebravostudios.theguide.gui.TheGuideGui
 
 case class Link( target : ResourceLocation, startX : Int, endX : Int )
 
 trait RenderableElement {
   def height( calc: TextSizeCalculator ) : Int = calc.textHeight + 1
   def render( x : Int, y : Int, renderer : FontRenderer ) : Unit
+  def clicked( x : Int, y : Int, gui : TheGuideGui ) : Unit = ()
 
   val color = 0x404040
 }
@@ -56,6 +58,10 @@ case class RenderableHeader( text: String, level : Int ) extends RenderableEleme
 case class TextLine( text : String, links: Set[Link] ) extends RenderableElement {
   def render(x : Int, y : Int, renderer : FontRenderer ) : Unit =
     renderer.drawString(text, x, y, color)
+
+  override def clicked( x : Int, y : Int, gui : TheGuideGui ) : Unit =
+    links.find( link => link.startX < x && x < link.endX )
+      .foreach( link => gui.loadPage( link.target ) )
 }
 
 case object BlankLine extends RenderableElement {
