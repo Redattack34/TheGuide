@@ -49,17 +49,17 @@ class SpanParserSpec extends FlatSpec {
   }
 
   it should "return a link span when given a paragraph consisting of a link" in {
-    assert( parseSpans( Seq( Paragraph( "[this is a link](theguide:testResourceLocation.txt)" ) ) ) ==
-      Right( Seq( SpanParagraph( Seq( LinkSpan( "this is a link", new ResourceLocation( "theguide:testResourceLocation.txt" ) ) ) ) ) ) )
+    assert( parseSpans( Seq( Paragraph( "[this is a link](theguide:markdown\\testResourceLocation.txt)" ) ) ) ==
+      Right( Seq( SpanParagraph( Seq( LinkSpan( "this is a link", new ResourceLocation( "theguide:markdown\\testResourceLocation.txt" ) ) ) ) ) ) )
   }
 
   it should "return paragraphs and links as they are found" in {
     assert( parseSpans( Seq( Paragraph( "Lorem ipsum dolor sit amet, " +
-        "[consectetur adipiscing elit.](theguide:testResourceLocation.md). Ut " +
+        "[consectetur adipiscing elit.](theguide:markdown/testResourceLocation.md). Ut " +
         "et ultrices quam. ") ) ) ==
           Right( Seq( SpanParagraph( Seq(
               TextSpan( "Lorem ipsum dolor sit amet, " ),
-              LinkSpan( "consectetur adipiscing elit.", new ResourceLocation( "theguide:testResourceLocation.md" ) ),
+              LinkSpan( "consectetur adipiscing elit.", new ResourceLocation( "theguide:markdown/testResourceLocation.md" ) ),
               TextSpan( ". Ut et ultrices quam. " ) ) ) ) ) )
   }
 }

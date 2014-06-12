@@ -43,7 +43,7 @@ private object SpanParser extends RegexParsers {
   private val text : Parser[String] = """[^\[\]]+""".r
 
   private val resourceLocation : Parser[ResourceLocation] =
-    "[0-9a-zA-Z]*".r ~ ":" ~ """[\.0-9a-zA-Z\\]*""".r ^^ {
+    "[0-9a-zA-Z]*".r ~ ":" ~ """[\.0-9a-zA-Z\\/]*""".r ^^ {
     case domain ~ ":" ~ path => new ResourceLocation( domain, path )
   }
 
