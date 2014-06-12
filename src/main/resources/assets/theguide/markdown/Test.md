@@ -1,5 +1,6 @@
 # Test Header 1
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus accumsan, 
+[Test Link.](theguide:markdown/MajorGeneral.md) Lorem ipsum dolor sit amet, 
+consectetur adipiscing elit. Phasellus accumsan, 
 arcu in pretium ornare, eros justo mollis velit, vel sollicitudin magna sapien 
 vel augue. Ut tempus, justo eu interdum imperdiet, tellus leo pharetra libero, 
 vel elementum urna arcu vitae felis. Aenean aliquet nunc a urna auctor cursus. 

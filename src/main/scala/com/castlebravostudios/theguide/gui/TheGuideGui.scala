@@ -41,6 +41,7 @@ import com.castlebravostudios.theguide.markdown.parser.Parser
 import org.lwjgl.input.Mouse
 import org.lwjgl.input.Keyboard
 import net.minecraft.client.gui.Gui
+import net.minecraft.util.ResourceLocation
 
 class TheGuideGui extends GuiScreen {
 
@@ -61,7 +62,7 @@ class TheGuideGui extends GuiScreen {
   private[this] val scrollbarWidth = 5
   private[this] val scrollbarHeight = 140
 
-  private[this] val text = Parser.load( TheGuide.document( "markdown/Test.md" ) )
+  private[this] val initialPage = TheGuide.document( "markdown/Test.md" )
 
   private[this] val color = 0xFF404040
 
@@ -79,8 +80,7 @@ class TheGuideGui extends GuiScreen {
     GL11.glScaled(0.5d, 0.5d, 0.5d)
 
     if ( document == null ) {
-      document = RenderableDocument( text, textXSize,
-          new DefaultTextSizeCalculator( fontRenderer ) )
+      loadPage( initialPage )
     }
     document.render( (width - textXSize/2) - 5, (height - textYSize/2),
         textXSize, textYSize, scroll, fontRenderer)
@@ -128,11 +128,39 @@ class TheGuideGui extends GuiScreen {
     super.keyTyped(keyChar, keyNum)
   }
 
+  override protected def mouseClicked( x : Int, y : Int, button : Int ) : Unit = {
+    if ( isOnScreen( x, y ) ) {
+      val ( docX, docY ) = toDocumentCoords( x, y )
+      document.clicked(docX, docY, this)
+    }
+    super.mouseClicked(x, y, button)
+  }
+
   private def drawCenteredRect( xSize : Int, ySize : Int): Unit = {
     val x = (width - xSize) / 2
     val y = (height - ySize) / 2
 
     drawTexturedModalRect(x, y, 0, 0, xSize, ySize)
+  }
+
+  private def isOnScreen(x: Int, y: Int) : Boolean = {
+    val minX = ( width - textXSize / 2 ) / 2
+    val maxX = ( width + textXSize / 2 ) / 2
+
+    val minY = ( height - textYSize / 2 ) / 2
+    val maxY = ( height + textYSize / 2 ) / 2
+
+    minX < x && x < maxX && minY < y && y < maxY
+  }
+
+
+  private def toDocumentCoords( x : Int, y : Int ) : (Int, Int) = {
+    val xOnScreen = x - ( width - textXSize / 2 ) / 2
+    val yOnScreen = y - ( height - textYSize / 2 ) / 2
+
+    val documentX = xOnScreen * 2
+    val documentY = yOnScreen * 2 + scroll
+    (documentX, documentY)
   }
 
   private def drawScrollbar() = {
@@ -144,5 +172,12 @@ class TheGuideGui extends GuiScreen {
     val y2 = baseY + (((scroll + textYSize).toFloat / document.size) * scrollbarHeight).toInt
 
     Gui.drawRect(x1, y1, x2, y2, color)
+  }
+
+  def loadPage(target: ResourceLocation) : Unit = {
+    val text = Parser.load( target )
+
+    document = RenderableDocument( text, textXSize,
+          new DefaultTextSizeCalculator( fontRenderer ) )
   }
 }

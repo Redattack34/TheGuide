@@ -36,6 +36,7 @@ import scala.collection.immutable.SortedMap
 import net.minecraft.client.gui.FontRenderer
 import scala.collection.mutable
 import com.google.common.annotations.VisibleForTesting
+import com.castlebravostudios.theguide.gui.TheGuideGui
 
 class RenderableDocument( renderables : SortedMap[Int, RenderableElement], val size : Int ) {
 
@@ -49,6 +50,12 @@ class RenderableDocument( renderables : SortedMap[Int, RenderableElement], val s
 
   @VisibleForTesting
   private[text] val elements : Seq[RenderableElement] = renderables.values.toList
+
+  def clicked( x : Int, y : Int, gui : TheGuideGui ) : Unit = {
+    val key = renderables.to( y ).lastOption.map( _._1 ).getOrElse( renderables.firstKey )
+    val line = renderables( key )
+    line.clicked( x, y, gui )
+  }
 }
 
 object RenderableDocument {
