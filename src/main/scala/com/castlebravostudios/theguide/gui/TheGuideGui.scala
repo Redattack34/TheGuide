@@ -59,7 +59,7 @@ class TheGuideGui extends GuiScreen {
 
   private[this] val scrollThumbBaseXOffset = 43
   private[this] val scrollThumbBaseYOffset = -70
-  private[this] val scrollbarWidth = 5
+  private[this] val scrollbarWidth = 4
   private[this] val scrollbarHeight = 140
 
   private[this] val initialPage = TheGuide.document( "markdown/Test.md" )
@@ -108,7 +108,7 @@ class TheGuideGui extends GuiScreen {
   }
 
   private def changeScroll( pixels : Int ) : Unit = {
-    scroll = (scroll - pixels).max( 0 ).min( document.size - textYSize )
+    scroll = (scroll - pixels).max( 0 ).min( document.size - textYSize ).max( 0 )
   }
 
   private def mouseWheelMoved( dist : Int ) {
@@ -153,7 +153,6 @@ class TheGuideGui extends GuiScreen {
     minX < x && x < maxX && minY < y && y < maxY
   }
 
-
   private def toDocumentCoords( x : Int, y : Int ) : (Int, Int) = {
     val xOnScreen = x - ( width - textXSize / 2 ) / 2
     val yOnScreen = y - ( height - textYSize / 2 ) / 2
@@ -164,12 +163,14 @@ class TheGuideGui extends GuiScreen {
   }
 
   private def drawScrollbar() = {
-    val x1 = (width/2) + scrollThumbBaseXOffset
+    val x1 = ( width.toFloat / 2).ceil.toInt + scrollThumbBaseXOffset
     val x2 = x1 + scrollbarWidth
 
     val baseY = (height/2) + scrollThumbBaseYOffset
-    val y1 = baseY + ((scroll.toFloat / document.size) * scrollbarHeight).toInt
-    val y2 = baseY + (((scroll + textYSize).toFloat / document.size) * scrollbarHeight).toInt
+    val y1Percent = ( scroll.toFloat / document.size ).max( 0.0f )
+    val y1 = baseY + (y1Percent * scrollbarHeight).toInt
+    val y2Percent = ((scroll + textYSize).toFloat / document.size).min( 1.0f )
+    val y2 = baseY + ( y2Percent * scrollbarHeight).toInt
 
     Gui.drawRect(x1, y1, x2, y2, color)
   }
