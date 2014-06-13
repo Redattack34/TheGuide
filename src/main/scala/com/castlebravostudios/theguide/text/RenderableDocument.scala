@@ -43,7 +43,7 @@ class RenderableDocument( renderables : SortedMap[Int, RenderableElement], val s
   def render( x : Int, y : Int, width : Int, height : Int, scroll : Int, renderer: FontRenderer ) : Unit = {
     val start = renderables.to( scroll - 20 ).lastOption.map( _._1 ).getOrElse( renderables.firstKey )
     val end = renderables.from( scroll + height ).headOption.map( _._1 ).getOrElse( renderables.lastKey )
-    renderables.range( start, end ).foreach { case (offset, renderable) =>
+    renderables.from(start).to(end).foreach { case (offset, renderable) =>
       renderable.render(x, y + offset - scroll, renderer)
     }
   }
