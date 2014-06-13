@@ -39,21 +39,23 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
   private val currentLineLinks = mutable.Set[Link]()
 
   def appendString(text: String) : Unit = {
-    text.split(" ").foreach( appendWord )
+    text.foreach( appendChar )
   }
 
-  private def appendWord( word : String ) : Unit = {
-    val newLine = if ( currentLineNoFormat.isEmpty() ) currentLine + word
-        else currentLine + " " + word
-    val width = calc.stringWidth( newLine )
+  private def appendChar( char : Char ) : Unit = {
+    val newLine = currentLine + char
 
-    if ( width <= maxWidth ) {
-      currentLine = newLine
+    if ( char.isWhitespace ) {
+      val width = calc.stringWidth( newLine )
+      if ( width > maxWidth ) {
+        val (start, end) = currentLine.splitAt( currentLine.lastIndexOf( " " ) )
+        currentLine = start
+        startNewLine()
+        currentLine += end.trim + char
+        return;
+      }
     }
-    else {
-      startNewLine()
-      currentLine += word
-    }
+    currentLine = newLine
   }
 
   private def startNewLine() = {
@@ -63,13 +65,14 @@ class WordWrapper( calc : TextSizeCalculator, maxWidth : Int ) {
       endLink()
     }
 
-    lines += TextLine( currentLine, currentLineLinks.toSet )
+    lines += TextLine( currentLine.trim, currentLineLinks.toSet )
     currentLine = ""
     currentLineLinks.clear()
     linkLoc.foreach( startLink )
   }
 
   def build : Seq[TextLine] = {
+    appendChar( ' ' )
     if ( !currentLineNoFormat.isEmpty() ) {
       startNewLine()
     }

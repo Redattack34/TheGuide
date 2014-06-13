@@ -1,5 +1,5 @@
 # Test Header 1
-[Test Link.](theguide:markdown/MajorGeneral.md) Lorem ipsum dolor sit amet, 
+[Test Link](theguide:markdown/MajorGeneral.md). Lorem ipsum dolor sit amet, 
 consectetur adipiscing elit. Phasellus accumsan, 
 arcu in pretium ornare, eros justo mollis velit, vel sollicitudin magna sapien 
 vel augue. Ut tempus, justo eu interdum imperdiet, tellus leo pharetra libero, 

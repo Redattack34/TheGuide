@@ -54,10 +54,10 @@ class WordWrapperSpec extends FlatSpec {
         "metus sagittis gravida non blandit purus."
     val expected = Seq(
           TextLine( "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-              "Maecenas mattis consequat ipsum sed auctor.", Set() ),
-          TextLine( "Fusce blandit convallis luctus. Ut vel euismod risus, vel " +
-              "mattis justo. Sed vitae odio nonmetus", Set() ),
-          TextLine( "sagittis gravida non blandit purus.", Set() )
+              "Maecenas mattis consequat ipsum sed", Set() ),
+          TextLine( "auctor. Fusce blandit convallis luctus. Ut vel euismod risus, vel " +
+              "mattis justo. Sed vitae odio", Set() ),
+          TextLine( "nonmetus sagittis gravida non blandit purus.", Set() )
         )
     wrapper.appendString(text)
     assert(wrapper.build === expected)
@@ -66,7 +66,7 @@ class WordWrapperSpec extends FlatSpec {
   it should "surround links with formatting characters" in {
     wrapper.appendString("Lorem")
     wrapper.startLink( new ResourceLocation( "test", "test" ) )
-    wrapper.appendString( "ipsum dolor sit amet" )
+    wrapper.appendString( " ipsum dolor sit amet" )
     wrapper.endLink()
     assert( wrapper.build.head.text === "Lorem§9§n ipsum dolor sit amet§r" )
   }
@@ -75,7 +75,7 @@ class WordWrapperSpec extends FlatSpec {
     val loc = new ResourceLocation( "test", "test" )
     wrapper.appendString("Lorem")
     wrapper.startLink( loc )
-    wrapper.appendString( "ipsum dolor sit amet" )
+    wrapper.appendString( " ipsum dolor sit amet" )
     wrapper.endLink()
     assert( wrapper.build.head ===
       TextLine( "Lorem§9§n ipsum dolor sit amet§r",
@@ -84,22 +84,23 @@ class WordWrapperSpec extends FlatSpec {
 
   it should "split links across two lines if necessary" in {
     val loc = new ResourceLocation( "test", "test" )
-    wrapper.appendString( "Lorem ipsum dolor sit amet," )
+    wrapper.appendString( "Lorem ipsum dolor sit amet, " )
     wrapper.startLink( loc )
     wrapper.appendString( "consectetur adipiscing elit. " +
-              "Maecenas mattis consequat ipsum sed auctor." )
-    wrapper.appendString( "Fusce blandit convallis luctus." )
+              "Maecenas mattis consequat ipsum sed auctor. " )
+    wrapper.appendString( "Fusce blandit convallis luctus. " )
     wrapper.endLink()
     wrapper.appendString( "Ut vel euismod risus, vel " +
               "mattis justo. Sed vitae odio nonmetus" )
 
-    val firstLine = TextLine( "Lorem ipsum dolor sit amet,§9§n consectetur adipiscing elit. " +
-              "Maecenas mattis consequat ipsum sed auctor.§r",
-              Set( Link( loc, 27, 100 ) ) )
-    val secondLine = TextLine( "§9§nFusce blandit convallis luctus.§r Ut vel euismod risus, vel " +
-              "mattis justo. Sed vitae odio nonmetus",
-              Set( Link( loc, 0, 31 ) ) )
-    assert( wrapper.build === Seq( firstLine, secondLine ) )
+    val firstLine = TextLine( "Lorem ipsum dolor sit amet, §9§nconsectetur adipiscing elit. " +
+              "Maecenas mattis consequat ipsum sed§r",
+              Set( Link( loc, 28, 92 ) ) )
+    val secondLine = TextLine( "§9§nauctor. Fusce blandit convallis luctus. §rUt vel euismod risus, vel " +
+              "mattis justo. Sed vitae odio",
+              Set( Link( loc, 0, 40 ) ) )
+    val thirdLine = TextLine( "nonmetus", Set() )
+    assert( wrapper.build === Seq( firstLine, secondLine, thirdLine ) )
   }
 
   it should "emit two links if two are in the text" in {
@@ -110,11 +111,19 @@ class WordWrapperSpec extends FlatSpec {
     wrapper.appendString("Lorem ipsum")
     wrapper.endLink()
     wrapper.startLink( loc2 )
-    wrapper.appendString( "dolor sit amet" )
+    wrapper.appendString( " dolor sit amet" )
     wrapper.endLink()
 
     assert( wrapper.build === Seq(
         TextLine( "§9§nLorem ipsum§r§9§n dolor sit amet§r",
             Set( Link( loc1, 0, 11 ), Link( loc2, 11, 26 ) ) ) ) )
+  }
+
+  it should "not insert a space where none existed in the markdown" in {
+    wrapper.appendString("Lorem Ipsum")
+    wrapper.appendString(".")
+    wrapper.appendString(" Dolor Sit Amet.")
+
+    assert( wrapper.build === Seq( new TextLine( "Lorem Ipsum. Dolor Sit Amet.", Set() ) ) )
   }
 }
