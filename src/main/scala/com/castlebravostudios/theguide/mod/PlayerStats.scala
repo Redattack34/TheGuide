@@ -29,13 +29,14 @@ package com.castlebravostudios.theguide.mod
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
-import PlayerStats.{ tagName, lastReadKey, lastScrollPosKey }
+import PlayerStats.{ tagName, lastReadKey, lastScrollPosKey, hasGuideKey }
 import net.minecraft.util.ResourceLocation
 
 class PlayerStats {
 
   private[this] var lastPageRead : String = ""
   var lastScrollPos : Int = _
+  var hasGuide : Boolean = false
 
   def getLastRead : Option[ResourceLocation] = Some( lastPageRead )
     .filter( _ != "" )
@@ -46,16 +47,20 @@ class PlayerStats {
     val tags = player.getEntityData()
     if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
 
-    lastPageRead = tags.getCompoundTag( tagName ).getString(lastReadKey)
-    lastScrollPos = tags.getCompoundTag( tagName ).getInteger(lastScrollPosKey)
+    val tag = tags.getCompoundTag( tagName )
+    lastPageRead = tag.getString(lastReadKey)
+    lastScrollPos = tag.getInteger(lastScrollPosKey)
+    hasGuide = tag.getBoolean(hasGuideKey)
   }
 
   def writeToNBT(player: EntityPlayer) : Unit = {
     val tags = player.getEntityData()
     if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
 
-    tags.getCompoundTag(tagName).setString(lastReadKey, lastPageRead)
-    tags.getCompoundTag(tagName).setInteger(lastScrollPosKey, lastScrollPos)
+    val tag = tags.getCompoundTag(tagName)
+    tag.setString(lastReadKey, lastPageRead)
+    tag.setInteger(lastScrollPosKey, lastScrollPos)
+    tag.setBoolean(hasGuideKey, hasGuide)
   }
 }
 object PlayerStats {
@@ -64,6 +69,7 @@ object PlayerStats {
 
   val lastReadKey = "LastRead"
   val lastScrollPosKey = "ScrollPosition"
+  val hasGuideKey = "HasGuide"
 
   def apply( player : EntityPlayer ) : PlayerStats = {
     val stats = new PlayerStats()

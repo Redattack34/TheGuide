@@ -30,6 +30,8 @@ package com.castlebravostudios.theguide.mod
 import cpw.mods.fml.common.IPlayerTracker
 import scala.collection.concurrent
 import net.minecraft.entity.player.EntityPlayer
+import com.castlebravostudios.theguide.items.Guide
+import net.minecraft.item.ItemStack
 
 
 object PlayerHandler extends IPlayerTracker {
@@ -40,6 +42,11 @@ object PlayerHandler extends IPlayerTracker {
     val stats = PlayerStats( player )
     playerStats += player.username -> stats
     stats.writeToNBT( player )
+
+    if ( !stats.hasGuide ) {
+      player.inventory.addItemStackToInventory( new ItemStack( Guide.guideItem ) )
+      stats.hasGuide = true
+    }
   }
 
   def onPlayerLogout(player: EntityPlayer): Unit = {

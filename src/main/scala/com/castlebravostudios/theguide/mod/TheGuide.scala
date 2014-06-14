@@ -71,7 +71,7 @@ object TheGuide {
     proxy.registerRenderers()
     proxy.loadTextures()
 
-    new Guide() //Constructor registers item.
+    Guide.register()
 
     NetworkRegistry.instance().registerGuiHandler(TheGuide, proxy)
     GameRegistry.registerPlayerTracker( PlayerHandler )

@@ -49,3 +49,8 @@ class Guide extends Item( Config.guideItemId ) {
     stack
   }
 }
+object Guide {
+  val guideItem = new Guide()
+
+  def register() : Unit = () //Item constructor registers automatically.
+}
