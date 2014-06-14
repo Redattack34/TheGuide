@@ -42,8 +42,10 @@ import org.lwjgl.input.Mouse
 import org.lwjgl.input.Keyboard
 import net.minecraft.client.gui.Gui
 import net.minecraft.util.ResourceLocation
+import com.castlebravostudios.theguide.mod.PlayerHandler
+import net.minecraft.entity.player.EntityPlayer
 
-class TheGuideGui extends GuiScreen {
+class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
   private[this] val foreground = TheGuide.texture( "textures/gui/guide-foreground.png" )
   private[this] val background = TheGuide.texture( "textures/gui/guide-background.png" )
@@ -80,7 +82,11 @@ class TheGuideGui extends GuiScreen {
     GL11.glScaled(0.5d, 0.5d, 0.5d)
 
     if ( document == null ) {
-      loadPage( initialPage )
+      val stats = PlayerHandler.getPlayerStats( player )
+      stats.foreach { st =>
+        loadPage( st.getLastRead.getOrElse( initialPage ) )
+        scroll = st.lastScrollPos
+      }
     }
     document.render( (width - textXSize/2) - 5, (height - textYSize/2),
         textXSize, textYSize, scroll, fontRenderer)
@@ -109,6 +115,7 @@ class TheGuideGui extends GuiScreen {
 
   private def changeScroll( pixels : Int ) : Unit = {
     scroll = (scroll - pixels).max( 0 ).min( document.size - textYSize ).max( 0 )
+    PlayerHandler.getPlayerStats(player).foreach( st => st.lastScrollPos = scroll )
   }
 
   private def mouseWheelMoved( dist : Int ) {
@@ -180,5 +187,7 @@ class TheGuideGui extends GuiScreen {
 
     document = RenderableDocument( text, textXSize,
           new DefaultTextSizeCalculator( fontRenderer ) )
+
+    PlayerHandler.getPlayerStats(player).foreach( _.setLastRead( target ) )
   }
 }

@@ -27,26 +27,29 @@
 
 package com.castlebravostudios.theguide.mod
 
-
-import net.minecraftforge.client.MinecraftForgeClient
-import cpw.mods.fml.common.registry.TickRegistry
-import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.common.IPlayerTracker
+import scala.collection.concurrent
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.world.World
-import com.castlebravostudios.theguide.gui.TheGuideGui
 
-class ClientProxy extends CommonProxy {
 
-  override def registerRenderers() : Unit = {
+object PlayerHandler extends IPlayerTracker {
+
+  private val playerStats = concurrent.TrieMap[String, PlayerStats]()
+
+  def onPlayerLogin(player: EntityPlayer): Unit = {
+    val stats = PlayerStats( player )
+    playerStats += player.username -> stats
+    stats.writeToNBT( player )
   }
 
-  override def loadTextures() : Unit = {
+  def onPlayerLogout(player: EntityPlayer): Unit = {
+    getPlayerStats( player ).foreach( _.writeToNBT( player ) )
+    playerStats -= player.username
   }
 
-  override def getClientGuiElement( id : Int, player : EntityPlayer, world : World, x : Int, y : Int, z : Int ) : Object = {
-    id match {
-      case TheGuide.theGuideScreenId => new TheGuideGui( player )
-      case _ => null
-    }
-  }
+  def getPlayerStats( player : EntityPlayer ) : Option[PlayerStats] =
+    playerStats.get( player.username )
+
+  def onPlayerChangedDimension(player: EntityPlayer): Unit = ()
+  def onPlayerRespawn(player: EntityPlayer): Unit = ()
 }

@@ -40,6 +40,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.network.NetworkMod
 import com.castlebravostudios.theguide.items.Guide
 import cpw.mods.fml.common.network.NetworkRegistry
+import cpw.mods.fml.common.registry.GameRegistry
 
 @Mod(modid="mod_TheGuide", version="1.0-alpha1", modLanguage="scala", useMetadata=true)
 @NetworkMod(clientSideRequired=true, serverSideRequired=true)
@@ -73,6 +74,7 @@ object TheGuide {
     new Guide() //Constructor registers item.
 
     NetworkRegistry.instance().registerGuiHandler(TheGuide, proxy)
+    GameRegistry.registerPlayerTracker( PlayerHandler )
   }
 
   def texture( path : String ) : ResourceLocation =

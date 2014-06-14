@@ -27,26 +27,47 @@
 
 package com.castlebravostudios.theguide.mod
 
-
-import net.minecraftforge.client.MinecraftForgeClient
-import cpw.mods.fml.common.registry.TickRegistry
-import cpw.mods.fml.relauncher.Side
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.world.World
-import com.castlebravostudios.theguide.gui.TheGuideGui
+import net.minecraft.nbt.NBTTagCompound
+import PlayerStats.{ tagName, lastReadKey, lastScrollPosKey }
+import net.minecraft.util.ResourceLocation
 
-class ClientProxy extends CommonProxy {
+class PlayerStats {
 
-  override def registerRenderers() : Unit = {
+  private[this] var lastPageRead : String = ""
+  var lastScrollPos : Int = _
+
+  def getLastRead : Option[ResourceLocation] = Some( lastPageRead )
+    .filter( _ != "" )
+    .map( s => new ResourceLocation( s ) )
+  def setLastRead( loc : ResourceLocation ) : Unit = lastPageRead = loc.toString
+
+  def readFromNBT(player : EntityPlayer) : Unit = {
+    val tags = player.getEntityData()
+    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
+
+    lastPageRead = tags.getCompoundTag( tagName ).getString(lastReadKey)
+    lastScrollPos = tags.getCompoundTag( tagName ).getInteger(lastScrollPosKey)
   }
 
-  override def loadTextures() : Unit = {
-  }
+  def writeToNBT(player: EntityPlayer) : Unit = {
+    val tags = player.getEntityData()
+    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
 
-  override def getClientGuiElement( id : Int, player : EntityPlayer, world : World, x : Int, y : Int, z : Int ) : Object = {
-    id match {
-      case TheGuide.theGuideScreenId => new TheGuideGui( player )
-      case _ => null
-    }
+    tags.getCompoundTag(tagName).setString(lastReadKey, lastPageRead)
+    tags.getCompoundTag(tagName).setInteger(lastScrollPosKey, lastScrollPos)
+  }
+}
+object PlayerStats {
+
+  val tagName = "TheGuide"
+
+  val lastReadKey = "LastRead"
+  val lastScrollPosKey = "ScrollPosition"
+
+  def apply( player : EntityPlayer ) : PlayerStats = {
+    val stats = new PlayerStats()
+    stats.readFromNBT(player)
+    return stats
   }
 }
