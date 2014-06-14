@@ -34,6 +34,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import com.castlebravostudios.theguide.mod.TheGuide
+import net.minecraft.item.crafting.CraftingManager
+import net.minecraft.block.Block
 
 class Guide extends Item( Config.guideItemId ) {
 
@@ -53,4 +55,14 @@ object Guide {
   val guideItem = new Guide()
 
   def register() : Unit = () //Item constructor registers automatically.
+
+  def registerRecipe() : Unit = {
+    CraftingManager.getInstance().addRecipe( new ItemStack( guideItem ),
+        " I ",
+        "SRS",
+        "SSS",
+        'I' : Character, new ItemStack( Item.dyePowder, 1, 0 ),
+        'S' : Character, Block.stone,
+        'R' : Character, Item.redstone );
+  }
 }

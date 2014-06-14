@@ -72,6 +72,7 @@ object TheGuide {
     proxy.loadTextures()
 
     Guide.register()
+    Guide.registerRecipe()
 
     NetworkRegistry.instance().registerGuiHandler(TheGuide, proxy)
     GameRegistry.registerPlayerTracker( PlayerHandler )
