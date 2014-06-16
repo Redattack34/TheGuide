@@ -50,19 +50,22 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
   private[this] val foreground = TheGuide.texture( "textures/gui/guide-foreground.png" )
   private[this] val background = TheGuide.texture( "textures/gui/guide-background.png" )
 
-  private[this] val foregroundXSize = 135
-  private[this] val foregroundYSize = 180
+  private[this] val foregroundXSize = 504 / 2
+  private[this] val foregroundTopYStart = 0
+  private[this] val foregroundTopYEnd = 54 / 2
+  private[this] val foregroundBottomYStart = 54 / 2
+  private[this] val foregroundBottonYEnd = 88 / 2
 
-  private[this] val backgroundXSize = 106
-  private[this] val backgroundYSize = 153
+  private[this] val backgroundXSize = 512 / 2
+  private[this] val backgroundYSize = 512 / 3
 
-  private[this] val textXSize = 180
+  private[this] val textXSize = 300
   private[this] val textYSize = 290
 
-  private[this] val scrollThumbBaseXOffset = 43
-  private[this] val scrollThumbBaseYOffset = -70
-  private[this] val scrollbarWidth = 4
-  private[this] val scrollbarHeight = 140
+  private[this] def scrollThumbBaseXOffset = 72
+  private[this] def scrollThumbBaseYOffset = -80
+  private[this] def scrollbarWidth = 4
+  private[this] def scrollbarHeight = 150
 
   private[this] val initialPage = TheGuide.document( "markdown/Test.md" )
 
@@ -75,12 +78,6 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
   override def drawScreen( mouseX : Int, mouseY : Int, param3 : Float ): Unit = {
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
 
-    mc.renderEngine.bindTexture( background )
-    drawCenteredRect( backgroundXSize, backgroundYSize )
-
-    GL11.glPushMatrix()
-    GL11.glScaled(0.5d, 0.5d, 0.5d)
-
     if ( document == null ) {
       val stats = PlayerHandler.getPlayerStats( player )
       stats.foreach { st =>
@@ -88,6 +85,12 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
         scroll = st.lastScrollPos
       }
     }
+
+    drawBackground()
+
+    GL11.glPushMatrix()
+    GL11.glScaled(0.5d, 0.5d, 0.5d)
+
     document.render( (width - textXSize/2) - 5, (height - textYSize/2),
         textXSize, textYSize, scroll, fontRenderer)
 
@@ -95,8 +98,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
 
-    mc.renderEngine.bindTexture( foreground )
-    drawCenteredRect( foregroundXSize, foregroundYSize )
+    drawForeground()
     drawScrollbar()
 
     super.drawScreen(mouseX, mouseY, param3)
@@ -169,6 +171,22 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
     (documentX, documentY)
   }
 
+  private def drawForeground() = {
+    val x = (width - foregroundXSize) / 2
+
+    mc.renderEngine.bindTexture( foreground )
+    val tex = mc.renderEngine.getTexture( foreground )
+    drawTexturedModalRect(x, (height - 200) / 2, 0,
+        foregroundTopYStart, foregroundXSize, (foregroundTopYEnd - foregroundTopYStart) )
+    drawTexturedModalRect(x, (height + 150) / 2, 0,
+        foregroundBottomYStart, foregroundXSize, foregroundBottonYEnd - foregroundBottomYStart )
+  }
+
+  private def drawBackground() = {
+    mc.renderEngine.bindTexture( background )
+    drawCenteredRect( backgroundXSize, backgroundYSize )
+  }
+
   private def drawScrollbar() = {
     val x1 = ( width.toFloat / 2).ceil.toInt + scrollThumbBaseXOffset
     val x2 = x1 + scrollbarWidth
@@ -179,6 +197,10 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
     val y2Percent = ((scroll + textYSize).toFloat / document.size).min( 1.0f )
     val y2 = baseY + ( y2Percent * scrollbarHeight).toInt
 
+    drawVerticalLine(x1, baseY, baseY + scrollbarHeight, color)
+    drawVerticalLine(x2, baseY, baseY + scrollbarHeight, color)
+    drawHorizontalLine(x1, x2, baseY, color)
+    drawHorizontalLine(x1, x2, baseY + scrollbarHeight, color)
     Gui.drawRect(x1, y1, x2, y2, color)
   }
 
