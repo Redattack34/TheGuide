@@ -46,6 +46,7 @@ import com.castlebravostudios.theguide.mod.PlayerHandler
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.client.gui.GuiButton
 import com.castlebravostudios.theguide.mod.Config
+import com.castlebravostudios.theguide.text.IndexPageRegistry
 
 class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
@@ -71,8 +72,6 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
   private[this] def scrollbarWidth = 4
   private[this] def scrollbarHeight = 150
 
-  private[this] val initialPage = TheGuide.document( "markdown/Test.md" )
-
   private[this] val color = 0xFF404040
 
   private[this] var document : RenderableDocument = _
@@ -84,9 +83,13 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
     if ( document == null ) {
       val stats = PlayerHandler.getPlayerStats( player )
-      stats.foreach { st =>
-        loadPage( st.getLastRead.getOrElse( initialPage ) )
-        scroll = st.lastScrollPos
+      stats.foreach { st => st.getLastRead match {
+        case Some( loc ) => {
+          loadPage( loc )
+          scroll = st.lastScrollPos
+          }
+        case None => loadHomePage()
+        }
       }
     }
 
@@ -153,10 +156,17 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
     }
 
     if ( isOnHomeButton( x, y ) ) {
-      loadPage( initialPage )
+      loadHomePage()
     }
 
     super.mouseClicked(x, y, button)
+  }
+
+  private def loadHomePage() : Unit = {
+    document = RenderableDocument( IndexPageRegistry.globalIndexPage, textXSize,
+          new DefaultTextSizeCalculator( fontRenderer ) )
+    changeScroll( Integer.MIN_VALUE )
+    PlayerHandler.getPlayerStats(player).foreach( _.clearLastRead )
   }
 
   private def isOnHomeButton( x : Int, y : Int ) : Boolean = {

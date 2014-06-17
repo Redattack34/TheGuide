@@ -25,56 +25,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.castlebravostudios.theguide.mod
+package com.castlebravostudios.theguide.text
 
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
-import PlayerStats.{ tagName, lastReadKey, lastScrollPosKey, hasGuideKey }
 import net.minecraft.util.ResourceLocation
+import com.castlebravostudios.theguide.markdown.MarkdownBlock
+import com.castlebravostudios.theguide.markdown.LinkSpan
+import com.castlebravostudios.theguide.markdown.Paragraph
+import com.castlebravostudios.theguide.markdown.TextSpan
 
-class PlayerStats {
+object IndexPageRegistry {
 
-  private[this] var lastPageRead : String = ""
-  var lastScrollPos : Int = _
-  var hasGuide : Boolean = false
+  private var indexPages = Seq[(String, ResourceLocation)]()
 
-  def getLastRead : Option[ResourceLocation] = Some( lastPageRead )
-    .filter( _ != "" )
-    .map( s => new ResourceLocation( s ) )
-  def clearLastRead : Unit = lastPageRead = null
-  def setLastRead( loc : ResourceLocation ) : Unit = lastPageRead = loc.toString
-
-  def readFromNBT(player : EntityPlayer) : Unit = {
-    val tags = player.getEntityData()
-    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
-
-    val tag = tags.getCompoundTag( tagName )
-    lastPageRead = tag.getString(lastReadKey)
-    lastScrollPos = tag.getInteger(lastScrollPosKey)
-    hasGuide = tag.getBoolean(hasGuideKey)
+  def register( name : String, loc : ResourceLocation ) : Unit = {
+    indexPages = (name, loc) +: indexPages
   }
 
-  def writeToNBT(player: EntityPlayer) : Unit = {
-    val tags = player.getEntityData()
-    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
-
-    val tag = tags.getCompoundTag(tagName)
-    tag.setString(lastReadKey, lastPageRead)
-    tag.setInteger(lastScrollPosKey, lastScrollPos)
-    tag.setBoolean(hasGuideKey, hasGuide)
-  }
-}
-object PlayerStats {
-
-  val tagName = "TheGuide"
-
-  val lastReadKey = "LastRead"
-  val lastScrollPosKey = "ScrollPosition"
-  val hasGuideKey = "HasGuide"
-
-  def apply( player : EntityPlayer ) : PlayerStats = {
-    val stats = new PlayerStats()
-    stats.readFromNBT(player)
-    return stats
+  def globalIndexPage : Seq[MarkdownBlock] = {
+    new Paragraph( Seq( TextSpan( "Below is a list of the index pages for each supported mod installed." ) ) ) +:
+    indexPages.reverse
+      .map{ case ( name, loc ) => new LinkSpan( name, loc ) }
+      .map( span => new Paragraph( Seq( span ) ) )
   }
 }

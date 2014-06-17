@@ -41,6 +41,8 @@ import cpw.mods.fml.common.network.NetworkMod
 import com.castlebravostudios.theguide.items.Guide
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
+import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent
+import com.castlebravostudios.theguide.text.IndexPageRegistry
 
 @Mod(modid="mod_TheGuide", version="1.0-alpha1", modLanguage="scala", useMetadata=true)
 @NetworkMod(clientSideRequired=true, serverSideRequired=true)
@@ -62,12 +64,10 @@ object TheGuide {
   }
 
   @EventHandler
-  def postInit( event : FMLPostInitializationEvent ) : Unit = {
-
-  }
-
-  @EventHandler
   def load( event : FMLInitializationEvent ) : Unit = {
+    IndexPageRegistry.register( "Lorem Ipsum", document( "markdown/Test.md" ) )
+    IndexPageRegistry.register( "Major General's Song", document( "markdown/MajorGeneral.md" ) )
+
     proxy.registerRenderers()
     proxy.loadTextures()
 
@@ -76,6 +76,19 @@ object TheGuide {
 
     NetworkRegistry.instance().registerGuiHandler(TheGuide, proxy)
     GameRegistry.registerPlayerTracker( PlayerHandler )
+  }
+
+  @EventHandler
+  def handleIMCMessage( event : IMCEvent ) : Unit = {
+    val iter = event.getMessages().iterator()
+    while( iter.hasNext() ) {
+      IMCHandler.handle( iter.next )
+    }
+  }
+
+  @EventHandler
+  def postInit( event : FMLPostInitializationEvent ) : Unit = {
+
   }
 
   def texture( path : String ) : ResourceLocation =

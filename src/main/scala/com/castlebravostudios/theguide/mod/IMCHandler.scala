@@ -27,54 +27,43 @@
 
 package com.castlebravostudios.theguide.mod
 
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
-import PlayerStats.{ tagName, lastReadKey, lastScrollPosKey, hasGuideKey }
+import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent
+import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage
+import com.castlebravostudios.theguide.text.IndexPageRegistry
 import net.minecraft.util.ResourceLocation
 
-class PlayerStats {
+object IMCHandler {
 
-  private[this] var lastPageRead : String = ""
-  var lastScrollPos : Int = _
-  var hasGuide : Boolean = false
+  private val REGISTER_FILE_KEY = "RegisterIndexFile"
 
-  def getLastRead : Option[ResourceLocation] = Some( lastPageRead )
-    .filter( _ != "" )
-    .map( s => new ResourceLocation( s ) )
-  def clearLastRead : Unit = lastPageRead = null
-  def setLastRead( loc : ResourceLocation ) : Unit = lastPageRead = loc.toString
+  private val nameKey = "name"
+  private val locationKey = "location"
 
-  def readFromNBT(player : EntityPlayer) : Unit = {
-    val tags = player.getEntityData()
-    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
-
-    val tag = tags.getCompoundTag( tagName )
-    lastPageRead = tag.getString(lastReadKey)
-    lastScrollPos = tag.getInteger(lastScrollPosKey)
-    hasGuide = tag.getBoolean(hasGuideKey)
+  def handle( message : IMCMessage ) : Unit = message.key match {
+    case REGISTER_FILE_KEY => handleRegisterFileEvent( message )
+    case _ => logError( message, "Unknown Message Key" )
   }
 
-  def writeToNBT(player: EntityPlayer) : Unit = {
-    val tags = player.getEntityData()
-    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
+  private def handleRegisterFileEvent( message : IMCMessage ) : Unit = {
+    if ( !message.isNBTMessage() ) {
+      logError( message, "Unexpected data type - must be an NBT Message" )
+      return
+    }
 
-    val tag = tags.getCompoundTag(tagName)
-    tag.setString(lastReadKey, lastPageRead)
-    tag.setInteger(lastScrollPosKey, lastScrollPos)
-    tag.setBoolean(hasGuideKey, hasGuide)
+    val tag = message.getNBTValue()
+    val name = tag.getString( nameKey )
+    val location = tag.getString( locationKey )
+
+    if ( name == "" || location == "" ) {
+      logError( message,
+          "Expected NBT Tag compound with name and resource location. Got: " + tag )
+      return
+    }
+
+    IndexPageRegistry.register( name, new ResourceLocation( location ) )
   }
-}
-object PlayerStats {
 
-  val tagName = "TheGuide"
+  private def logError( message : IMCMessage, error : String ) : Unit = {
 
-  val lastReadKey = "LastRead"
-  val lastScrollPosKey = "ScrollPosition"
-  val hasGuideKey = "HasGuide"
-
-  def apply( player : EntityPlayer ) : PlayerStats = {
-    val stats = new PlayerStats()
-    stats.readFromNBT(player)
-    return stats
   }
 }
