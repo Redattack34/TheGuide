@@ -44,6 +44,7 @@ import net.minecraft.client.gui.Gui
 import net.minecraft.util.ResourceLocation
 import com.castlebravostudios.theguide.mod.PlayerHandler
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.client.gui.GuiButton
 
 class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
@@ -54,7 +55,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
   private[this] val foregroundTopYStart = 0
   private[this] val foregroundTopYEnd = 54 / 2
   private[this] val foregroundBottomYStart = 54 / 2
-  private[this] val foregroundBottonYEnd = 88 / 2
+  private[this] val foregroundBottonYEnd = 90 / 2
 
   private[this] val backgroundXSize = 512 / 2
   private[this] val backgroundYSize = 512 / 3
@@ -130,8 +131,8 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
       case Keyboard.KEY_UP => changeScroll( 10 )
       case Keyboard.KEY_NEXT => changeScroll( -100 )
       case Keyboard.KEY_PRIOR => changeScroll( 100 )
-      case Keyboard.KEY_HOME => scroll = 0
-      case Keyboard.KEY_END => scroll = document.size - textYSize
+      case Keyboard.KEY_HOME => changeScroll( Integer.MIN_VALUE )
+      case Keyboard.KEY_END => changeScroll( Integer.MAX_VALUE )
       case _ => ()
     }
     super.keyTyped(keyChar, keyNum)
@@ -142,7 +143,22 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
       val ( docX, docY ) = toDocumentCoords( x, y )
       document.clicked(docX, docY, this)
     }
+
+    if ( isOnHomeButton( x, y ) ) {
+      loadPage( initialPage )
+    }
+
     super.mouseClicked(x, y, button)
+  }
+
+  private def isOnHomeButton( x : Int, y : Int ) : Boolean = {
+    val xMin = (width - foregroundXSize) / 2 + 25
+    val xMax = xMin + 8
+
+    val yMin = (height + 150) / 2 + 5
+    val yMax = yMin + 7
+
+    xMin <= x && x <= xMax && yMin <= y && y <= yMax
   }
 
   private def drawCenteredRect( xSize : Int, ySize : Int): Unit = {
@@ -209,6 +225,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
     document = RenderableDocument( text, textXSize,
           new DefaultTextSizeCalculator( fontRenderer ) )
+    changeScroll( Integer.MIN_VALUE )
 
     PlayerHandler.getPlayerStats(player).foreach( _.setLastRead( target ) )
   }
