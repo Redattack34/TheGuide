@@ -45,11 +45,14 @@ import net.minecraft.util.ResourceLocation
 import com.castlebravostudios.theguide.mod.PlayerHandler
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.client.gui.GuiButton
+import com.castlebravostudios.theguide.mod.Config
 
 class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
   private[this] val foreground = TheGuide.texture( "textures/gui/guide-foreground.png" )
   private[this] val background = TheGuide.texture( "textures/gui/guide-background.png" )
+
+  private[this] val fontSizeMult = Config.fontSizeMultiplier
 
   private[this] val foregroundXSize = 504 / 2
   private[this] val foregroundTopYStart = 0
@@ -60,8 +63,8 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
   private[this] val backgroundXSize = 512 / 2
   private[this] val backgroundYSize = 512 / 3
 
-  private[this] val textXSize = 300
-  private[this] val textYSize = 290
+  private[this] val textXSize = (150 / fontSizeMult).toInt
+  private[this] val textYSize = (125 / fontSizeMult).toInt
 
   private[this] def scrollThumbBaseXOffset = 72
   private[this] def scrollThumbBaseYOffset = -80
@@ -90,9 +93,14 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
     drawBackground()
 
     GL11.glPushMatrix()
-    GL11.glScaled(0.5d, 0.5d, 0.5d)
+    GL11.glScaled(fontSizeMult, fontSizeMult, fontSizeMult)
 
-    document.render( (width - textXSize/2) - 5, (height - textYSize/2),
+    def scaleAndCenter( screenSize : Int, textSize : Int ) : Int = {
+      ( ( (screenSize / fontSizeMult) - textSize ) / 2 ).toInt
+    }
+
+    document.render( scaleAndCenter( width - 10, textXSize ),
+        scaleAndCenter( height, textYSize ),
         textXSize, textYSize, scroll, fontRenderer)
 
     GL11.glPopMatrix();
