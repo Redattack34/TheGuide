@@ -171,7 +171,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
   private def isOnHomeButton( x : Int, y : Int ) : Boolean = {
     val xMin = (width - foregroundXSize) / 2 + 25
-    val xMax = xMin + 8
+    val xMax = xMin + 7
 
     val yMin = (height + 150) / 2 + 5
     val yMax = yMin + 7
@@ -187,22 +187,22 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
   }
 
   private def isOnScreen(x: Int, y: Int) : Boolean = {
-    val minX = ( width - textXSize / 2 ) / 2
-    val maxX = ( width + textXSize / 2 ) / 2
+    val minX = ( width - 10 - textXSize * fontSizeMult ) / 2
+    val maxX = ( width - 10 + textXSize * fontSizeMult ) / 2
 
-    val minY = ( height - textYSize / 2 ) / 2
-    val maxY = ( height + textYSize / 2 ) / 2
+    val minY = ( height - 40 - textYSize * fontSizeMult ) / 2
+    val maxY = ( height + 25 + textYSize * fontSizeMult ) / 2
 
     minX < x && x < maxX && minY < y && y < maxY
   }
 
   private def toDocumentCoords( x : Int, y : Int ) : (Int, Int) = {
-    val xOnScreen = x - ( width - textXSize / 2 ) / 2
-    val yOnScreen = y - ( height - textYSize / 2 ) / 2
+    val xOnScreen = x - ( width - 10 - textXSize * fontSizeMult ) / 2
+    val yOnScreen = y - ( height - textYSize * fontSizeMult ) / 2
 
-    val documentX = xOnScreen * 2
-    val documentY = yOnScreen * 2 + scroll
-    (documentX, documentY)
+    val documentX = xOnScreen / fontSizeMult
+    val documentY = yOnScreen / fontSizeMult + scroll
+    (documentX.toInt, documentY.toInt)
   }
 
   private def drawForeground() = {
