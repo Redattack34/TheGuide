@@ -28,19 +28,16 @@
 package com.castlebravostudios.theguide.mod
 
 import java.io.File
-import net.minecraftforge.common.Configuration
-import net.minecraftforge.common.Property
+import net.minecraftforge.common.config.Configuration
 
 object Config {
 
-  var guideItemId : Int = _
   var fontSizeMultiplier : Double = _
 
   def load( file : File ): Unit = {
     val config = new Configuration( file )
     config.load()
 
-    guideItemId = config.getItem( "TheGuide", 4242 ).getInt()
     fontSizeMultiplier = config.get("Options", "fontSizeMultiplier", 0.5).getDouble( 0.5 )
 
     if ( config.hasChanged() ) {

@@ -27,15 +27,13 @@
 
 package com.castlebravostudios.theguide.mod
 
-
-import net.minecraftforge.client.MinecraftForgeClient
-import cpw.mods.fml.common.registry.TickRegistry
-import cpw.mods.fml.relauncher.Side
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.world.World
 import com.castlebravostudios.theguide.gui.TheGuideGui
 
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.world.World
+
 class ClientProxy extends CommonProxy {
+
 
   override def registerRenderers() : Unit = {
   }

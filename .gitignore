@@ -24,3 +24,5 @@ src/api
 screenshots
 .scalastyle
 asm
+run
+logs

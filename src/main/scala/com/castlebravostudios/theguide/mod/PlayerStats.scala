@@ -34,6 +34,7 @@ import net.minecraft.util.ResourceLocation
 
 class PlayerStats {
 
+
   private[this] var lastPageRead : String = ""
   var lastScrollPos : Int = _
   var hasGuide : Boolean = false
@@ -46,7 +47,7 @@ class PlayerStats {
 
   def readFromNBT(player : EntityPlayer) : Unit = {
     val tags = player.getEntityData()
-    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
+    if ( !tags.hasKey(tagName) ) tags.setTag( tagName, new NBTTagCompound() )
 
     val tag = tags.getCompoundTag( tagName )
     lastPageRead = tag.getString(lastReadKey)
@@ -56,7 +57,7 @@ class PlayerStats {
 
   def writeToNBT(player: EntityPlayer) : Unit = {
     val tags = player.getEntityData()
-    if ( !tags.hasKey(tagName) ) tags.setCompoundTag( tagName, new NBTTagCompound() )
+    if ( !tags.hasKey(tagName) ) tags.setTag( tagName, new NBTTagCompound() )
 
     val tag = tags.getCompoundTag(tagName)
     tag.setString(lastReadKey, lastPageRead)

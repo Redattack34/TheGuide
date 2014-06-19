@@ -50,6 +50,7 @@ import com.castlebravostudios.theguide.text.IndexPageRegistry
 
 class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
+
   private[this] val foreground = TheGuide.texture( "textures/gui/guide-foreground.png" )
   private[this] val background = TheGuide.texture( "textures/gui/guide-background.png" )
 
@@ -104,7 +105,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
     document.render( scaleAndCenter( width - 10, textXSize ),
         scaleAndCenter( height, textYSize ),
-        textXSize, textYSize, scroll, fontRenderer)
+        textXSize, textYSize, scroll, fontRendererObj)
 
     GL11.glPopMatrix();
 
@@ -164,7 +165,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
 
   private def loadHomePage() : Unit = {
     document = RenderableDocument( IndexPageRegistry.globalIndexPage, textXSize,
-          new DefaultTextSizeCalculator( fontRenderer ) )
+          new DefaultTextSizeCalculator( fontRendererObj ) )
     changeScroll( Integer.MIN_VALUE )
     PlayerHandler.getPlayerStats(player).foreach( _.clearLastRead )
   }
@@ -242,7 +243,7 @@ class TheGuideGui( player : EntityPlayer ) extends GuiScreen {
     val text = Parser.load( target )
 
     document = RenderableDocument( text, textXSize,
-          new DefaultTextSizeCalculator( fontRenderer ) )
+          new DefaultTextSizeCalculator( fontRendererObj ) )
     changeScroll( Integer.MIN_VALUE )
 
     PlayerHandler.getPlayerStats(player).foreach( _.setLastRead( target ) )
