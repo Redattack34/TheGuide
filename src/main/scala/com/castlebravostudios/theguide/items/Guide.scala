@@ -37,13 +37,14 @@ import com.castlebravostudios.theguide.mod.TheGuide
 import net.minecraft.item.crafting.CraftingManager
 import net.minecraft.block.Block
 
-class Guide extends Item( Config.guideItemId ) {
+class Guide extends Item {
+
+  Item.itemRegistry.addObject(1, "TheGuide:guide", this)
 
   setUnlocalizedName("theguide.TheGuide")
   setTextureName("theguide:theguide")
   setCreativeTab(CreativeTabs.tabMisc)
   setMaxStackSize(1)
-
 
   override def onItemRightClick( stack : ItemStack, world : World, player : EntityPlayer ) : ItemStack = {
     player.openGui( TheGuide, TheGuide.theGuideScreenId, world,
@@ -61,8 +62,8 @@ object Guide {
         " I ",
         "SRS",
         "SSS",
-        'I' : Character, new ItemStack( Item.dyePowder, 1, 0 ),
-        'S' : Character, Block.stone,
-        'R' : Character, Item.redstone );
+        'I' : Character, new ItemStack( Item.itemRegistry.getObject("dye").asInstanceOf[Item], 1, 0 ),
+        'S' : Character, Block.getBlockFromName("stone"),
+        'R' : Character, Item.itemRegistry.getObject("redstone").asInstanceOf[Item] );
   }
 }

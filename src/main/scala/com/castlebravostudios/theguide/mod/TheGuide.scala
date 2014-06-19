@@ -27,7 +27,6 @@
 
 package com.castlebravostudios.theguide.mod
 
-import java.util.logging.Logger
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
@@ -37,15 +36,16 @@ import cpw.mods.fml.common.SidedProxy
 import cpw.mods.fml.common.event.FMLInitializationEvent
 import cpw.mods.fml.common.event.FMLPostInitializationEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
-import cpw.mods.fml.common.network.NetworkMod
 import com.castlebravostudios.theguide.items.Guide
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent
 import com.castlebravostudios.theguide.text.IndexPageRegistry
+import org.apache.logging.log4j.Logger
+import cpw.mods.fml.common.FMLCommonHandler
+import net.minecraftforge.common.MinecraftForge
 
 @Mod(modid="mod_TheGuide", version="1.0-alpha1", modLanguage="scala", useMetadata=true)
-@NetworkMod(clientSideRequired=true, serverSideRequired=true)
 object TheGuide {
 
   val theGuideScreenId : Int = 1
@@ -74,8 +74,9 @@ object TheGuide {
     Guide.register()
     Guide.registerRecipe()
 
-    NetworkRegistry.instance().registerGuiHandler(TheGuide, proxy)
-    GameRegistry.registerPlayerTracker( PlayerHandler )
+    NetworkRegistry.INSTANCE.registerGuiHandler(TheGuide, proxy)
+    FMLCommonHandler.instance().bus().register(PlayerHandler)
+    MinecraftForge.EVENT_BUS.register(PlayerHandler)
   }
 
   @EventHandler

@@ -27,20 +27,28 @@
 
 package com.castlebravostudios.theguide.mod
 
-import cpw.mods.fml.common.IPlayerTracker
+import java.util.UUID
+
 import scala.collection.concurrent
-import net.minecraft.entity.player.EntityPlayer
+
 import com.castlebravostudios.theguide.items.Guide
+
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent
 
-object PlayerHandler extends IPlayerTracker {
+object PlayerHandler {
 
-  private val playerStats = concurrent.TrieMap[String, PlayerStats]()
+  private val playerStats = concurrent.TrieMap[UUID, PlayerStats]()
 
-  def onPlayerLogin(player: EntityPlayer): Unit = {
+  @SubscribeEvent
+  def onPlayerLogin(event : PlayerLoggedInEvent): Unit = {
+    val player = event.player
     val stats = PlayerStats( player )
-    playerStats += player.username -> stats
+    playerStats += player.getUniqueID() -> stats
     stats.writeToNBT( player )
 
     if ( !stats.hasGuide ) {
@@ -49,14 +57,14 @@ object PlayerHandler extends IPlayerTracker {
     }
   }
 
-  def onPlayerLogout(player: EntityPlayer): Unit = {
+  @SubscribeEvent
+  def onPlayerLogout(event: PlayerLoggedOutEvent): Unit = {
+    val player = event.player
     getPlayerStats( player ).foreach( _.writeToNBT( player ) )
-    playerStats -= player.username
+    playerStats -= player.getUniqueID()
   }
 
   def getPlayerStats( player : EntityPlayer ) : Option[PlayerStats] =
-    playerStats.get( player.username )
+    playerStats.get( player.getUniqueID() )
 
-  def onPlayerChangedDimension(player: EntityPlayer): Unit = ()
-  def onPlayerRespawn(player: EntityPlayer): Unit = ()
 }
