@@ -52,9 +52,11 @@ class RenderableDocument( renderables : SortedMap[Int, RenderableElement], val s
   private[text] val elements : Seq[RenderableElement] = renderables.values.toList
 
   def clicked( x : Int, y : Int, gui : TheGuideGui ) : Unit = {
-    val key = renderables.to( y ).lastOption.map( _._1 ).getOrElse( renderables.firstKey )
-    val line = renderables( key )
-    line.clicked( x, y, gui )
+    if ( y < size ) {
+      val key = renderables.to( y ).lastOption.map( _._1 ).getOrElse( renderables.firstKey )
+      val line = renderables( key )
+      line.clicked( x, y, gui )
+    }
   }
 }
 
