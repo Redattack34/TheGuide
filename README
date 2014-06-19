@@ -1,0 +1,13 @@
+A Minecraft mod which provides a simple ingame documentation API for mod
+developers to use. Documentation is loaded from markdown files which are treated
+like any other resource used by Minecraft, which allows them to be altered or
+expanded by resource packs.
+
+Currently only a very small subset of markdown is supported - links, headers,
+and plain text. The link syntax has been changed from normal markdown - instead
+of providing a URL, links contain a standard Minecraft resource path of the form
+"modname:path/to/markdown/file". A larger subset of markdown syntax will be
+supported in future versions.
+
+All credit to asie for the idea behind this mod. See 
+http://mc.shinonome.ch/doku.php?id=wiki:blog:state_of_the_pack
