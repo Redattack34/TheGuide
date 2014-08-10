@@ -64,6 +64,7 @@ object IMCHandler {
   }
 
   private def logError( message : IMCMessage, error : String ) : Unit = {
-
+    val messageString = s"Key: ${message.key}, Sender: ${message.getSender()}"
+    TheGuide.logger.error(s"Failed to handle IMC message ($messageString). Reason: $error" )
   }
 }
